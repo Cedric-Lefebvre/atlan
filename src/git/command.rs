@@ -1,39 +1,65 @@
 use std::process::Command;
 
-pub fn init()  -> () {
-    let mut list_dir = Command::new("git")
+pub fn init(path: String) -> () {
+    Command::new("git")
         .arg("init")
-        .arg("/tmp/test")
+        .arg(path)
         .status()
         .expect("process failed to execute");
 }
 
-pub fn add()  -> () {
-    let mut list_dir = Command::new("git")
+pub fn remote(path: String, remote: String) -> () {
+    Command::new("git")
         .arg("-C")
-        .arg("/tmp/test")
+        .arg(path)
+        .arg("remote")
+        .arg("add")
+        .arg("origin")
+        .arg(remote)
+        .status()
+        .expect("process failed to execute");
+}
+
+pub fn pull(path: String, remote: String) -> () {
+    Command::new("git")
+        .arg("-C")
+        .arg(path)
+        .arg("pull")
+        .arg(remote)
+        .arg("master")
+        .status()
+        .expect("process failed to execute");
+}
+
+pub fn add(path: String) -> () {
+    Command::new("git")
+        .arg("-C")
+        .arg(path)
         .arg("add")
         .arg(".")
         .status()
         .expect("process failed to execute");
 }
 
-pub fn commit()  -> () {
-    let mut list_dir = Command::new("git")
+pub fn commit(path: String, message: String) -> () {
+    Command::new("git")
         .arg("-C")
-        .arg("/tmp/test")
+        .arg(path)
         .arg("commit")
         .arg("-m")
-        .arg("test")
+        .arg(message)
         .status()
         .expect("process failed to execute");
 }
 
-pub fn push()  -> () {
-    let mut list_dir = Command::new("git")
+pub fn push(path: String) -> () {
+    Command::new("git")
         .arg("-C")
-        .arg("/tmp/test")
+        .arg(path)
         .arg("push")
+        .arg("--set-upstream")
+        .arg("origin")
+        .arg("master")
         .status()
         .expect("process failed to execute");
 }

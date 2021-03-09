@@ -5,4 +5,5 @@ environment:
 files:
     - ~/.config/Code/User/settings.json
     - ~/.config/tilix/bookmarks.json
+    - ~/.bash_utils
 

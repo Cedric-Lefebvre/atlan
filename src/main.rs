@@ -1,6 +1,6 @@
 mod cli;
 mod settings;
-// mod git;
+mod git;
 
 fn main() {
     let args = cli::arguments::get_args();
