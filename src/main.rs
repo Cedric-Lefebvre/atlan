@@ -1,12 +1,13 @@
-mod arguments;
-// mod config;
+mod cli;
+mod settings;
+// mod git;
 
 fn main() {
-    let args = arguments::get_args();
+    let args = cli::arguments::get_args();
     // println!("{:?}", args);
 
 
-    // let config = config::get_config();
+    // let config = settings::config::get_config();
 
     // println!("{:#?}", config);
     // config::create_config();

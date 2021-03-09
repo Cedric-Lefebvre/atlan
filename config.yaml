@@ -4,4 +4,5 @@ environment:
     GITHUB_TOKEN: qwe
 files:
     - ~/.config/Code/User/settings.json
+    - ~/.config/tilix/bookmarks.json
 
