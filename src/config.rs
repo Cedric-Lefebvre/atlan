@@ -19,7 +19,7 @@ pub enum Environment {
 }
 
 pub fn get_config() -> Data {
-    let f = File::open("src/something.yaml").expect("File not found");
+    let f = File::open("config.yaml").expect("File not found");
     serde_yaml::from_reader(f).unwrap()
 }
 

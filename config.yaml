@@ -1,7 +1,7 @@
-git_repo: git:....
+git_repo: git@github.com:Cedric-Lefebvre/backup-config.git
 environment:
     GITHUB_USER: qwe
     GITHUB_TOKEN: qwe
 files:
-    - #filePath
+    - ~/.config/Code/User/settings.json
 
