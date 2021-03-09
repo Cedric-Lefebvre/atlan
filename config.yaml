@@ -1,0 +1,7 @@
+git_repo: git:....
+environment:
+    GITHUB_USER: qwe
+    GITHUB_TOKEN: qwe
+files:
+    - #filePath
+
