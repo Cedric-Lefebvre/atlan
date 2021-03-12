@@ -1,3 +1,5 @@
+#[allow(warnings)]  //Disable warnings temporarly
+
 mod cli;
 mod settings;
 mod git;
