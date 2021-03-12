@@ -88,14 +88,15 @@ pub fn main() {
                     resolved_path = get_home() + &resolved_path
                 }
                 resolved_path += file_name; // /home/username/.config/Code/User/settings.json
+                
+                if !Path::new(&resolved_path).exists() {
+                    fs::create_dir_all(resolved_path.clone()).expect("Error when creating folder");
+                }
 
-                fs::create_dir_all(full_file_path).expect("Error when creating folder");
-                fs::copy(full_file_path, resolved_path).expect("Error when copying file");
+                fs::copy(full_file_path, resolved_path.clone()).expect("Error when copying file");
             }
 
             fs::remove_dir_all(backup_path.clone()).expect("Error when deleting folder");
-            println!("{:?}", time);
         }
-        _ => (),
     }
 }
