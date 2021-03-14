@@ -1,15 +1,16 @@
-#[allow(warnings)]  //Disable warnings temporarly
-
 mod cli;
 mod settings;
 mod git;
+mod utils;
 
-use std::time::{SystemTime, UNIX_EPOCH};
 use std::fs;
 use std::path::Path;
 use crate::git::command::Git;
-use crate::cli::arguments::{Cli,get_home};
+use crate::cli::arguments::Cli;
 use structopt::StructOpt;
+// use crate::utils::path::get_real_path;
+use crate::utils::time::get_timestamp;
+use crate::utils::file::File;
 
 pub fn main() {
     match Cli::from_args() {
@@ -17,11 +18,7 @@ pub fn main() {
             println!("{:?}", path)
         },
         Cli::Backup { path } => {
-            let duration =  SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .expect("Error occurred");
-            let time = duration.as_secs() * 1000 +
-                duration.subsec_nanos() as u64 / 1_000_000;
+            let time = get_timestamp();
             let backup_path: String = format!("/tmp/{}", time);
             let config = settings::config::get_config();
             
@@ -35,35 +32,24 @@ pub fn main() {
             git.pull();
 
             for origin in config.files {
-                let file_name = Path::new(&origin).file_name().unwrap().to_str().unwrap();   // settings.json
-                let file_path = &origin.replace(file_name, "");   // ~/.config/Code/User/
-                let full_folder_path = format!("{}/{}", backup_path, file_path); // /tmp/1615323956137/~/.config/Code/User/
-                let full_file_path = format!("{}{}", full_folder_path, file_name);   // /tmp/1615323956137/~/.config/Code/User/settings.json
-                
-                let mut resolved_path: String = file_path.to_string(); // /home/username/.config/Code/User/
-                if file_path.starts_with("~") {
-                    resolved_path.remove(0);
-                    resolved_path = get_home() + &resolved_path
-                }
-                resolved_path += file_name; // /home/username/.config/Code/User/settings.json
+                let file = File::new(origin, backup_path.clone());
 
-                fs::create_dir_all(full_folder_path).expect("Error when creating folder");
-                fs::copy(resolved_path, full_file_path).expect("Error when copying file");
+                let mut resolved_path: String = file.real_path; // /home/{username}/.config/Code/User/
+                resolved_path += &file.file_name; // /home/{username}/.config/Code/User/settings.json
+
+                fs::create_dir_all(file.full_folder_path).expect("Error when creating folder");
+                fs::copy(resolved_path, file.full_file_path).expect("Error when copying file");
             }
 
             git.add();
             git.commit(time.to_string());
-            // git.push();
+            git.push();
 
             fs::remove_dir_all(backup_path.clone()).expect("Error when deleting folder");
             println!("{:?}", time);
         },
         Cli::Restore { path } => {
-            let duration =  SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .expect("Error occurred");
-            let time = duration.as_secs() * 1000 +
-                duration.subsec_nanos() as u64 / 1_000_000;
+            let time = get_timestamp();
             let backup_path: String = format!("/tmp/{}", time);
             let config = settings::config::get_config();
             
@@ -77,23 +63,15 @@ pub fn main() {
             git.pull();
 
             for destination in config.files {
-                let file_name = Path::new(&destination).file_name().unwrap().to_str().unwrap();   // settings.json
-                let file_path = &destination.replace(file_name, "");   // ~/.config/Code/User/
-                let full_folder_path = format!("{}/{}", backup_path, file_path); // /tmp/1615323956137/~/.config/Code/User/
-                let full_file_path = format!("{}{}", full_folder_path, file_name);   // /tmp/1615323956137/~/.config/Code/User/settings.json
-                
-                let mut resolved_path: String = file_path.to_string(); // /home/username/.config/Code/User/
-                if file_path.starts_with("~") {
-                    resolved_path.remove(0);
-                    resolved_path = get_home() + &resolved_path
-                }
-                
+                let file = File::new(destination, backup_path.clone());
+
+                let mut resolved_path: String = file.real_path;                
                 if !Path::new(&resolved_path).exists() {
                     fs::create_dir_all(resolved_path.clone()).expect("Error when creating folder");
                 }
-                
-                resolved_path += file_name;
-                fs::copy(full_file_path, resolved_path.clone()).expect("Error when copying file");
+                resolved_path += &file.file_name;
+
+                fs::copy(file.full_file_path, resolved_path.clone()).expect("Error when copying file");
             }
 
             fs::remove_dir_all(backup_path.clone()).expect("Error when deleting folder");
