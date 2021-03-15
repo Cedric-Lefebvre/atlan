@@ -25,7 +25,7 @@ pub fn main() {
 
             return settings::config::get_config_content();
         },
-        Cli::Backup { path } => {
+        Cli::Backup {} => {
             let time = get_timestamp();
             let backup_path: String = format!("/tmp/{}", time);
             let config = settings::config::get_config();
@@ -53,7 +53,7 @@ pub fn main() {
             fs::remove_dir_all(backup_path).expect("Error when deleting folder");
             print!("{}", Colour::Green.paint("Backup completed \n"));
         },
-        Cli::Restore { path } => {
+        Cli::Restore {} => {
             let time = get_timestamp();
             let backup_path: String = format!("/tmp/{}", time);
             let config = settings::config::get_config();

@@ -12,13 +12,7 @@ pub enum Cli {
         delete: bool
     },
     #[structopt(about = "Backup configuration from local computer")]
-    Backup {
-        #[structopt(short = "e", long = "--path", help = "Path", default_value = "config.yaml")]
-        path: String,
-    },
+    Backup {},
     #[structopt(about = "Restore configuration on local computer")]
-    Restore {
-        #[structopt(short = "e", long = "--path", help = "Path", default_value = "config.yaml")]
-        path: String,
-    }
+    Restore {}
 }

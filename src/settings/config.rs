@@ -25,18 +25,12 @@ pub enum Environment {
 }
 
 pub fn get_config() -> Config {
-    let location: String = format!("{}/{}", get_home_path(), CONFIG_PATH);
-    let path = std::path::Path::new(&location);
-
-    let f = File::open("config.yaml").expect("File not found");
+    let f = File::open(get_config_path()).expect("File not found");
     serde_yaml::from_reader(f).unwrap()
 }
 
 pub fn get_config_content() -> () {
-    let location: String = format!("{}/{}", get_home_path(), CONFIG_PATH);
-    let path = std::path::Path::new(&location);
-
-    println!("{}", read_to_string(path).expect("error reading file"));
+    println!("{}", read_to_string(get_config_path()).expect("error reading file"));
 }
 
 pub fn create_config() -> () {
@@ -49,16 +43,26 @@ pub fn create_config() -> () {
     let mut file = File::create(path).expect("Error occured when creating the file");
     file.write_all(CONFIG_CONTENT.as_bytes()).expect("Error occured when writing to file");
     
-    return println!("{} {}",
+    println!("{} {}",
         Colour::Green.paint("Config file created:"),
         Colour::Yellow.paint("/home/cedric/.config/atlan/config.yaml")
     )
 }
 
 pub fn delete_config() -> () {
+    if Path::new(&get_config_path()).exists() {
+        remove_file(get_config_path()).expect("Error occured when deleeting the file");
+        return println!("{}", Colour::Green.paint("Config file deleted \n"))
+    }
+    println!("{}", Colour::Red.paint("Missing config file \n"))
+}
+
+fn get_config_path() -> String {
     let location: String = format!("{}/{}", get_home_path(), CONFIG_PATH);
     let path = std::path::Path::new(&location);
 
-    remove_file(path).expect("Error occured when deleeting the file");
-    return println!("{}", Colour::Green.paint("Config file deleted \n"))
+    match path.to_str() {
+        Some(str) => return str.to_string(),
+        None => return "Error".to_string()
+    }
 }
