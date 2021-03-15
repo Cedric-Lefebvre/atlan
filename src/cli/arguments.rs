@@ -6,8 +6,10 @@ use structopt::StructOpt;
 pub enum Cli {
     #[structopt(about = "Configuration file")]
     Config {
-        #[structopt(short = "e", long = "--path", help = "Path", default_value = "config.yaml")]
-        path: String,
+        #[structopt(long = "--create", help = "Path")]
+        create: bool,
+        #[structopt(long = "--delete", help = "Path")]
+        delete: bool
     },
     #[structopt(about = "Backup configuration from local computer")]
     Backup {
@@ -19,11 +21,4 @@ pub enum Cli {
         #[structopt(short = "e", long = "--path", help = "Path", default_value = "config.yaml")]
         path: String,
     }
-}
-
-pub fn get_home() -> std::string::String {
-    match dirs::home_dir() {
-        Some(path) => return path.display().to_string(),
-        None => return "Impossible to get your home dir!".to_string(),
-    };
 }

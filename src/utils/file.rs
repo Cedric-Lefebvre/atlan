@@ -1,5 +1,5 @@
 use std::path::Path;
-use crate::cli::arguments::get_home;
+use crate::utils::path::get_home_path;
 
 #[derive(Debug)]
 pub struct File {
@@ -20,7 +20,7 @@ impl File {
         let mut real_folder_path = folder_path.to_string(); // /home/{username}/.config/Code/User/
         if folder_path.starts_with("~") {
             real_folder_path.remove(0);
-            real_folder_path = get_home() + &real_folder_path
+            real_folder_path = get_home_path() + &real_folder_path
         }
         let real_file_path = real_folder_path.clone() + &file_name; // /home/{username}/.config/Code/User/settings.json
 

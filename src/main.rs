@@ -10,11 +10,20 @@ use crate::cli::arguments::Cli;
 use structopt::StructOpt;
 use crate::utils::time::get_timestamp;
 use crate::utils::file::File;
+use ansi_term::Colour;
 
 pub fn main() {
     match Cli::from_args() {
-        Cli::Config { path } => {
-            println!("{:?}", path)
+        Cli::Config { create, delete } => {
+            if create { 
+                return settings::config::create_config();
+            }
+
+            if delete { 
+                return settings::config::delete_config();
+            }
+
+            return settings::config::get_config_content();
         },
         Cli::Backup { path } => {
             let time = get_timestamp();
@@ -31,7 +40,8 @@ pub fn main() {
             git.pull();
 
             for origin in config.files {
-                let file = File::new(origin, backup_path.clone());
+                let file = File::new(origin.clone(), backup_path.clone());
+                print!("{} \n", Colour::Yellow.paint(origin));
                 fs::create_dir_all(file.tmp_folder_path).expect("Error when creating folder");
                 fs::copy(file.real_file_path, file.tmp_file_path).expect("Error when copying file");
             }
@@ -41,7 +51,7 @@ pub fn main() {
             git.push();
 
             fs::remove_dir_all(backup_path).expect("Error when deleting folder");
-            println!("{:?}", time);
+            print!("{}", Colour::Green.paint("Backup completed \n"));
         },
         Cli::Restore { path } => {
             let time = get_timestamp();
@@ -58,14 +68,15 @@ pub fn main() {
             git.pull();
 
             for destination in config.files {
-                let file = File::new(destination, backup_path.clone());
+                let file = File::new(destination.clone(), backup_path.clone());
+                print!("{} \n", Colour::Yellow.paint(destination));
                 if !Path::new(&file.real_folder_path).exists() {
                     fs::create_dir_all(&file.real_folder_path).expect("Error when creating folder");
                 }
-
                 fs::copy(file.tmp_file_path, &file.real_file_path).expect("Error when copying file");
             }
-
+            
+            print!("{}", Colour::Green.paint("Restauration completed \n"));
             fs::remove_dir_all(backup_path).expect("Error when deleting folder");
         }
     }

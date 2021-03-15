@@ -9,11 +9,10 @@ pub struct Git {
 
 impl Git {
     pub fn init(&self) -> () {
-        println!("{:?}",self);
         Command::new("git")
             .arg("init")
             .arg(&self.path)
-            .status()
+            .output()
             .expect("process failed to execute");
     }
     
@@ -25,7 +24,7 @@ impl Git {
             .arg("add")
             .arg("origin")
             .arg(&self.repo)
-            .status()
+            .output()
             .expect("process failed to execute");
     }
     
@@ -36,7 +35,7 @@ impl Git {
             .arg("pull")
             .arg(&self.repo)
             .arg("master")
-            .status()
+            .output()
             .expect("process failed to execute");
     }
     
@@ -46,7 +45,7 @@ impl Git {
             .arg(&self.path)
             .arg("add")
             .arg(".")
-            .status()
+            .output()
             .expect("process failed to execute");
     }
     
@@ -57,7 +56,7 @@ impl Git {
             .arg("commit")
             .arg("-m")
             .arg(message)
-            .status()
+            .output()
             .expect("process failed to execute");
     }
     
@@ -69,7 +68,7 @@ impl Git {
             .arg("--set-upstream")
             .arg("origin")
             .arg("master")
-            .status()
+            .output()
             .expect("process failed to execute");
     }
 }
