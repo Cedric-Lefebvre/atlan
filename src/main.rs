@@ -6,7 +6,7 @@ mod utils;
 use std::fs;
 use std::path::Path;
 use crate::git::command::Git;
-use crate::cli::arguments::Cli;
+use crate::cli::arguments::{Cli,ConfigOpts};
 use structopt::StructOpt;
 use crate::utils::time::get_timestamp;
 use crate::utils::file::File;
@@ -14,16 +14,12 @@ use ansi_term::Colour;
 
 pub fn main() {
     match Cli::from_args() {
-        Cli::Config { create, delete } => {
-            if create { 
-                return settings::config::create_config();
+        Cli::Config(action) => {
+            match action {
+                ConfigOpts::Create {} => return settings::config::create_config(),
+                ConfigOpts::Delete {} => return settings::config::delete_config(),
+                ConfigOpts::View {} => return settings::config::get_config_content()
             }
-
-            if delete { 
-                return settings::config::delete_config();
-            }
-
-            return settings::config::get_config_content();
         },
         Cli::Backup {} => {
             let time = get_timestamp();

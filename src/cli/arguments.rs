@@ -5,14 +5,16 @@ use structopt::StructOpt;
 #[structopt(about = "Backup/Restore tool")]
 pub enum Cli {
     #[structopt(about = "Configuration file")]
-    Config {
-        #[structopt(long = "--create", help = "Path")]
-        create: bool,
-        #[structopt(long = "--delete", help = "Path")]
-        delete: bool
-    },
+    Config(ConfigOpts),
     #[structopt(about = "Backup configuration from local computer")]
     Backup {},
     #[structopt(about = "Restore configuration on local computer")]
     Restore {}
+}
+
+#[derive(StructOpt,Debug)]
+pub enum ConfigOpts {
+    Create {},
+    Delete {},
+    View {}
 }
