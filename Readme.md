@@ -1,6 +1,6 @@
 # Atlan
 
-A small CLI to export and import configuration files from different hosts by syncing them to a common git repository.
+A small Linux CLI to export and import configuration files from different hosts by syncing them to a common git repository.
 
 ## How to install
 
@@ -50,7 +50,7 @@ atlan --
 atlan --help
 ```
 
-### Notes: Every command's configuration is coming from `/.config/atlan/config.yaml`
+Notes: Every command's configuration is coming from `/.config/atlan/config.yaml`
 
 ## Todo
 
