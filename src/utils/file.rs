@@ -1,5 +1,5 @@
-use std::path::Path;
 use crate::utils::path::get_home_path;
+use std::path::Path;
 
 #[derive(Debug)]
 pub struct File {
@@ -8,13 +8,18 @@ pub struct File {
     pub tmp_folder_path: String,
     pub tmp_file_path: String,
     pub real_folder_path: String,
-    pub real_file_path: String
+    pub real_file_path: String,
 }
 
 impl File {
     pub fn new(path: String, backup_path: String) -> Self {
-        let file_name = Path::new(&path).file_name().unwrap().to_str().unwrap().to_string();   // settings.json
-        let folder_path = path.replace(&file_name, "");   // ~/.config/Code/User/
+        let file_name = Path::new(&path)
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string();
+        let folder_path = path.replace(&file_name, ""); // ~/.config/Code/User/
         let tmp_folder_path = format!("{}/{}", backup_path, folder_path); // /tmp/{timestamp}/~/.config/Code/User/
         let tmp_file_path = format!("{}{}", tmp_folder_path, file_name); // /tmp/{timestamp}/~/.config/Code/User/settings.json
         let mut real_folder_path = folder_path.to_string(); // /home/{username}/.config/Code/User/
@@ -30,7 +35,7 @@ impl File {
             tmp_folder_path,
             tmp_file_path,
             real_folder_path,
-            real_file_path
+            real_file_path,
         }
     }
 }
