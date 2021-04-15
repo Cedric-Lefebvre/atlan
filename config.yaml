@@ -1,9 +1,0 @@
-git_repo: git@github.com:Cedric-Lefebvre/backup-config.git
-environment:
-    GITHUB_USER: qwe
-    GITHUB_TOKEN: qwe
-files:
-    - ~/.config/Code/User/settings.json
-    - ~/.config/tilix/bookmarks.json
-    - ~/.bash_utils
-
