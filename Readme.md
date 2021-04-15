@@ -44,7 +44,7 @@ atlan backup
 atlan restore
 
 # Show version of CLI #
-atlan --
+atlan --version
 
 # Show help #
 atlan --help
